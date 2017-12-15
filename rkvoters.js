@@ -1,3 +1,6 @@
+
+var api = "/dion_data/api/app.php";
+
 var app = angular.module('RKVApp', ['ui.bootstrap']);
 
 app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '$modal',
@@ -13,9 +16,9 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 
 		
 			$rootScope.query = {
-				firstname : "A",
-				lastname : "B",
-				support_level : "2",
+				firstname : "",
+				lastname : "",
+				support_level : "0",
 				enroll : "D",
 				sex : "M",
 				age_range: "80+",
@@ -24,12 +27,12 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 				host_event: true,
 				has_phone: true,
 				never_called: true,
-				stnum: "23",
-				stname: "Manet",
-				city: "Newton",
-				county: "Cumberland",
-				region: "2. Cumberland County",
-				turf: "Portland"
+				stnum: "",
+				stname: "",
+				city: "",
+				county: "County",
+				region: "Region",
+				turf: ""
 			}
 
 			$scope.map = {
@@ -37,97 +40,21 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 						'key=AIzaSyC6MLx8c1eQORx3uTNmL5RwXY761YSXaVs'
 			}
 			
-			$scope.totals = [
-				'active voters', 'contacts', 'supporters'
-			];
 			
 			$rootScope.contactType = 'Phone Call';
 			$rootScope.callstatus = 'Connection';
 		}			
 		$scope.init();
+
+
+
+		$scope.runApi = function(request, f){
+			$http.post(api, request).then(function(response){ f(response.data)});
+		}
+
 		
 		// DATA MODEL
-		$scope.load_turfs = function(turf_list){
 		
-			console.log(turf_list);
-		
-			$scope.total_counts = {
-				active_voters: 0,
-				contacts: 0,
-				likes: 0
-			};
-			$.each(turf_list, function(idx, turf){
-				$scope.total_counts.active_voters += parseInt(turf.active_voters);
-				$scope.total_counts.contacts += parseInt(turf.contacts);
-				$scope.total_counts.likes += parseInt(turf.supporters);
-			});			
-		
-			$scope.turf_hash = {};
-			$.each(turf_list, function(idx, turf){
-				$scope.turf_hash[turf.turfid] = turf;
-				turf.totals = {};
-				$.each($scope.totals, function(i, total_name){
-					if(total_name == 'active voters'){
-						turf.active_voters = parseInt(turf.active_voters);
-						var percent =  parseInt((turf.active_voters / $scope.total_counts.active_voters) * 100);
-						turf.totals['active voters'] = {
-							num: turf.active_voters,
-							percent: percent + '%' 
-						}
-					}
-					else {
-						turf[total_name] = parseInt(turf[total_name]);
-						var percent = parseInt((turf[total_name] / turf.active_voters) * 100);
-						turf.totals[total_name] = {
-							num: turf[total_name],
-							percent: percent + '%' 
-						}
-					}
-				});
-			});
-			
-		}
-		$scope.load_turfs($scope.rkvoters_data.turfs);
-		
-		$scope.load_streets = function(street_list, openTurfs){
-			$scope.streets = {};
-			$.each(street_list, function(idx, street){
-				var turf = $scope.turf_hash[street.turfid];
-			
-				if(!(street.turfid in $scope.streets)){
-					$scope.streets[street.turfid] = {
-						turf: turf,
-						state : 'closed',
-						toggle_command : 'open',
-						streets: []
-					}
-					if(openTurfs && $.inArray(street.turfid, openTurfs) != -1){
-						$scope.toggleStreetSet($scope.streets[street.turfid], true);
-					}
-				}
-				street.totals = {};
-				$.each($scope.totals, function(i, total_name){
-					if(total_name == 'active voters'){
-						street.active_voters = parseInt(street.active_voters);
-						var percent = parseInt((street.active_voters / turf.active_voters) * 100);
-						street.totals['active voters'] = {
-							num: street.active_voters,
-							percent: percent + '%'
-						}
-					}
-					else {
-						street[total_name] = parseInt(street[total_name]);
-						var percent = parseInt((street[total_name] / street.active_voters) * 100);
-						street.totals[total_name] = {
-							num: street[total_name],
-							percent: percent + '%' 
-						}
-					}
-				});
-				$scope.streets[street.turfid].streets.push(street);
-			});
-		}
-		$scope.load_streets($scope.rkvoters_data.streets);
 		
 		$scope.load_knocklist = function(data){
 			$scope.knocklist = {people: [], addresses: [], contacts: []};
@@ -142,8 +69,6 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 				$scope.load_person(person);
 				$scope.knocklist.people.push(person);
 
-				console.log($scope.knocklist.people);
-				
 				if(person.support_level != 0) $scope.knocklist.contacts.push(person);
 				
 				// load address block
@@ -188,7 +113,6 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			}
 
 			
-			$scope.$digest();
 		}
 
 		$scope.load_person = function(person){
@@ -241,100 +165,14 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 		
 		$scope.search = function(){
 			var request = {
-				api: 'get_knocklist',
-				listRequest: $scope.listRequest
+				api: 'get_voterlist',
+				listRequest: $rootScope.query
 			}
-			var currentReference = this;
-			$scope.currentReference = currentReference;
-			$.post('', request, function(response){
-				delete $scope.listRequest.stnum;
-				$scope.updateMap($scope.listRequest.street_name);
-				if($scope.currentReference != currentReference) return;
+			$scope.runApi(request, function(response){
 				$scope.load_knocklist(response);
-			}, 'json');
+			});
 		}
-		
-		$scope.updateTurfAssignment = function(street, oldTurfId){
-			var request = {
-				api: 'updateTurfAssignment',
-				streetid: street.streetid,
-				turfid: street.turfid
-			}
-			$.post('', request, function(streetlist){
-				var openTurfs = [oldTurfId, street.turfid];
-				$scope.load_streets(streetlist, openTurfs);
-				$scope.$digest();
-			}, 'json');
-			
-		}
-		
-		$scope.updateTotals = function(){
-			var request = {
-				api: 'updateTotals'
-			}
-			$.post('', request, function(response){
-				$scope.load_turfs(response.turfs);
-				$scope.load_streets(response.streets);
-				$scope.$digest();
-			}, 'json');
-			
-		}
-		
-		$scope.updateReportMode = function(viewMode){			
-			if(viewMode == 'fundraising'){
-				var request = {
-					api: 'getDonations'
-				}
-				$.post('', request, function(response){
-					$scope.donationTotal = response[0].total + response[1].total + response[2].total;
-					$scope.donationSets = response;
-					$scope.$digest();
-				}, 'json');
-			}
-			if(viewMode == 'emailLocalSupporters'){
-				var request = {
-					api: 'getLocalSupporterEmails'
-				}
-				$.post('', request, function(response){
-					$scope.localSupporterEmailList = response;
-					$scope.$digest();
-				}, 'json');
-			}
-			if(viewMode == 'mailingList'){
-				var request = {
-					api: 'getMailingList'
-				}
-				$.post('', request, function(response){
-					console.log(response.length);
-					$scope.listLength = response.length;
-					$scope.mailingList = response;
-					$scope.$digest();
-				}, 'json');
-			}
-			
-			
-		}
-		
-		$scope.setsupport_level = function(support_level, person){
-		
-		
-			person.support_level = support_level;
-			var request = {
-				api : 'updatePerson',
-				rkid : person.rkid,
-				person : person,
-				listRequest: $rootScope.appScope.listRequest
-			}
-			$.post('', request, function(response){
-				$rootScope.appScope.load_knocklist(response);	
-			}, 'json');
-		}
-		
-		$scope.openStreet = function(street_name){
-			$scope.listRequest.street_name = street_name;
-			$scope.loadComponent('knocklist');
-			$scope.search();
-		}
+
 		
 		
 		// UI CONTROLS
@@ -378,7 +216,8 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 				api : 'getFullPerson',
 				rkid : person.rkid
 			}
-			$.post('', request, function(person){
+
+			$scope.runApi(request, function(person){
 				if(person.neighbors){
 					$.each(person.neighbors, function(k, neighbor){
 						$scope.load_person(neighbor);
@@ -390,7 +229,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 					template: $('#modal_template').html(),
 					controller: 'FeaturePersonCtrl',
 				});			
-			}, 'json');
+			});
 		}
 		
 		$scope.openListManager = function(){								
@@ -661,6 +500,7 @@ app.controller('SearchFormCtrl',
 			
 			$scope.query = $rootScope.query; 
 	
+			$scope.search = $rootScope.appScope.search;
 	
 			
 		}

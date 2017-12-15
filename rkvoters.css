@@ -16,8 +16,7 @@
 .modal-content {
 	display: inline-block;
 	text-align: left;
-	padding-top: 60px;
-	background: none;
+	margin-top: 60px;
 }
 
 .modal-dialog {

@@ -23,47 +23,7 @@
 
 	<div ng-if="component=='knocklist'">
 		<div class="searchFilter">
-			<select ng-model="listRequest.street_name">
-				<option>Select Street...</option>
-				<optgroup ng-repeat="turf in streets" label="{{turf.turf.turf_name}}">
-					<option ng-repeat="street in turf.streets">{{street.street_name}}</option>
-				</optgroup>
-			</select>
-			<input ng-model="listRequest.search_str" ng-change="search()" placeholder="Search..." />
-			<select ng-model="listRequest.type">
-				<option>All</option>
-				<option>Active</option>
-				<option>Donors</option>
-				<option>Volunteers</option>
-				<option>Phones</option>
-				<option>Phones - Open</option>
-				<option>Phones - Not Called</option>
-				<option>Phones (Not Anchor) - Not Called</option>
-				<option>Phones - Called</option>				
-				<option>Need Postcards</option>		
-				<option>Sent Postcards</option>
-				<option>Seniors - Phones</option>
-				<option>Seniors - Phones - Not Called</option>
-				<option>Active Under 35</option>
-				<option>Active Under 35 - with phones</option>
-				<option>West End - Super - No Contact</option>																										
-			</select>
-			<select ng-model="listRequest.party">
-				<option>-</option>
-				<option>G</option>
-				<option>D</option>
-				<option>R</option>
-			</select>
-			<select ng-model="listRequest.support_level">
-				<option>-</option>
-				<option>V</option>
-				<option>0</option>
-				<option>1</option>
-				<option>2</option>			
-				<option>3</option>
-				<option>4</option>
-				<option>5</option>				
-			</select>
+			
 			<button ng-click="openSearchForm()">SEARCH</button>
 			<button ng-click="reverse()">REVERSE</button>
 			<button ng-click="openPersonAdder()">ADD PERSON</button>
@@ -741,6 +701,7 @@
 				<input type="text" placeholder="Last Name" ng-model="query.lastname">
 				<select ng-model="query.support_level">
 					<option>Support Level</option>
+					<option value="1">0 - Unidentified</option>
 					<option value="1">1 - With Us Strongly</option>
 					<option value="2">2 - Leaning Our Way</option>
 					<option value="3">3 - Undecided</option>
@@ -811,7 +772,7 @@
 					<option>Turf</option>
 				</select>
 			</div>
-			<button>SEARCH</button>
+			<button ng-click="search()">SEARCH</button>
 			<div style="clear: both;"></div>
 		</div>
 	</div>
