@@ -1,0 +1,111 @@
+.searchFilter { margin: 10px 0; }
+.result { padding: 7px 15px 15px; border-top: solid 1px #ccc; font-size: 12px; page-break-inside: avoid; }
+.addressResult:hover { cursor: default; background: white; }
+.addressResident:hover { cursor: pointer; text-decoration: underline; }
+.innerFrame { padding: 0; }
+.support_level 	{ height: 30px; width: 30px; border: solid 1px #444;
+				border-radius: 15px; text-align: center; padding-top: 6px; }
+.support_level span { display: none; }
+.support_level0	{ }
+.support_level1	{ background: green; }
+.support_level2	{ background: yellow; }
+.support_level3	{ background: red; }
+.support_level4	{ background: #777; }	
+.support_level5	{ background: black; }		
+
+.modal-content {
+	display: inline-block;
+	text-align: left;
+	padding-top: 60px;
+	background: none;
+}
+
+.modal-dialog {
+	text-align: center;
+}
+
+.interaction_count { text-align: center; color: #999; font-size: 12px; margin-top: 5px; }
+.modal-dialog { width: 900px; max-width: 95%; }
+.modalFrame { padding: 15px; }
+.modalFrame .field 	{ padding-top: 15px; }
+.modalFrame  input 	{ width: 100%; }
+.modalFrame  select { width: 100%; }	
+.modalFrame  textarea { width: 100%; height: 60px; padding: 5px; font-size: 12px; }		
+.modalFrame  .topSection { border-bottom: dashed 1px #ccc; margin-bottom: 15px; padding-bottom: 15px; }		
+.modalFrame  h2 { margin-top: 0 }			
+label { margin: 15px 0 2px; }
+
+
+#modal_searchForm {
+	
+}
+
+.search_container {
+	text-align: center;
+	background: #eee;
+}
+
+#search_form {
+	text-align: left;
+	padding: 20px 50px;
+	
+	font-family: arial;
+	display: inline-block;
+	margin: 0 auto;
+}
+input {
+	height: 30px;
+	width: 180px;
+	padding: 0 10px;
+	line-height: 30px;
+	font-size: 14px;
+	margin: 10px;
+}
+
+select {
+	/*display: block;*/
+	height: 30px;
+	font-size: 14px;
+	width: 180px;
+	margin: 10px;
+}
+
+button {
+	height: 40px;
+	text-align: center;
+	color: white;
+	background: #4683ea;
+	border: solid 1px #ccc;
+	float: right;
+	margin: 20px 0 10px 10px;
+}
+
+.header {
+	font-size: 24px;
+	font-weight: bold;
+	margin: 10px 0px;
+}
+
+.subhead {
+	font-weight: bold;
+	margin: 30px 15px 0;
+}
+
+.checkbox {
+	width: 20px;
+	margin-top: 14px !important;
+}
+
+table {
+	margin-left: 15px;
+}
+
+label {
+	line-height: 20px;
+	font-size: 12px;
+	padding-left: 10px;
+	padding-right: 20px;
+	width: 120px;
+	display: block;
+	float: left;
+}
