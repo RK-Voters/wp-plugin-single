@@ -1,3 +1,25 @@
+
+/* LOGGED OUT */
+.logged_out_img     { height: 126px; width: 126px; margin: 20px auto;
+                      border-radius: 63px; overflow: hidden; border: solid 1px #ccc; }
+.logged_out_img img { height: 100%; width: 100%}
+#loginform          { margin-top: 40px;}
+.loggedOut label    { font-size: 12px; display: block; line-height: 15px; margin-top: 4px}
+.login-username     { margin-bottom: 20px; }
+.loggedOut input {
+	width: 220px;
+}
+
+
+.loggedOut input[type="checkbox"] { margin-right: 0; opacity: 1; display: inline; float: none; width: auto; height: auto; margin-right: 5px;
+    -moz-appearance: checkbox; -webkit-appearance: checkbox; -ms-appearance: checkbox; appearance: checkbox; }
+
+
+.submit_error {
+	border: solid 1px red;
+}
+
+
 .searchFilter { margin: 10px 0; }
 .result { padding: 7px 15px 15px; border-top: solid 1px #ccc; font-size: 12px; page-break-inside: avoid; }
 .addressResult:hover { cursor: default; background: white; }
@@ -54,11 +76,9 @@ label { margin: 15px 0 2px; }
 }
 input {
 	height: 30px;
-	width: 180px;
 	padding: 0 10px;
 	line-height: 30px;
 	font-size: 14px;
-	margin: 10px;
 }
 
 select {
@@ -69,14 +89,14 @@ select {
 	margin: 10px;
 }
 
-button {
+button, .button {
 	height: 40px;
 	text-align: center;
 	color: white;
 	background: #4683ea;
 	border: solid 1px #ccc;
 	float: right;
-	margin: 20px 0 10px 10px;
+	margin: 20px 0 10px;
 }
 
 .header {
@@ -102,9 +122,7 @@ table {
 label {
 	line-height: 20px;
 	font-size: 12px;
-	padding-left: 10px;
-	padding-right: 20px;
-	width: 120px;
-	display: block;
-	float: left;
+/*	width: 120px;
+*/	display: block;
+
 }

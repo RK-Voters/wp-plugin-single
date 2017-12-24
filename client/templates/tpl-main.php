@@ -1,3 +1,6 @@
+
+I AM LOADING
+
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
 <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
 <link href="<?php echo plugins_url(); ?>/rkvoters/rkvoters.css" rel="stylesheet" />

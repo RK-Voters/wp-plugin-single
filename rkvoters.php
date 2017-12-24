@@ -30,116 +30,82 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-include('rkvoters-api.php');
+require_once("config.php");
+require_once('rkvoters_model.php');
 
 
-
-add_action('init','rkv_api');
-function rkv_api(){
-
-	// is admin
-	global $isAdmin;
-	session_start();
-	$user = wp_get_current_user();
-	$isAdmin = false;
-	if ( in_array( 'delete_others_posts', (array) $user->allcaps ) ) {
-		$isAdmin = true;
-		if($_SESSION['routeBackToApp']){
-			unset($_SESSION['routeBackToApp']);
-			header('Location: /voting-tool');
-		}
-	}
-	else {
-		
-		// if unauthenticated and on app page - set flag and route to login
-		if(strpos($_SERVER['REQUEST_URI'], 'voting-tool') === 1){
-			$_SESSION['routeBackToApp'] = true;
-			header('Location: /wp-admin');
-			exit;
-		}
-	}
-	
-	
-	if(count($_POST) == 0){
-		$request = (array) json_decode(file_get_contents('php://input'));
-	}
-	else {
-		$request = $_POST;
-	}
-
-
-	if(isset($request['api']) && $isAdmin){
-		extract($request);
-		$data_client = new RKVoters_Client();
-		$data_client -> request = $request;
-
-		$response = $data_client -> $api(); 
-		echo json_encode($response);
-		exit;
-	}
-	
-	
-	if(isset($_GET['export']) && $isAdmin){
-		header("Content-Type: text/csv"); 
-		header("Content-Disposition: attachment; filename=\"Contacts.csv\"");
-		$data_client = new RKVoters_Client();
-		
-		// export emails
-		if($_GET['export'] == 'emails'){
-			$contacts = $data_client -> getContactsWithEmails();			
-
-			// headers
-			$keys = array_keys($contacts[0]);
-			echo implode(',', $keys) . "\n";
-
-			foreach($contacts as $contact){
-				echo implode(',', $contact) . "\n"; 
-			}
-
-			exit;		
-		}
-		
-		// export mailing list
-		if($_GET['export'] == 'mailinglist'){
-			$contacts = $data_client -> getMailingList();
-
-			echo "Name; Address 1; Address 2 \n";			
-			foreach($contacts as $k => $contact){
-				echo "Everybody at; " . $contact['addr1'] . '; ' . $contact['addr2'] . "\n";
-			}
-			exit;		
-		}
-		
-		
-		// export donors
-		if($_GET['export'] == 'donors'){
-			$contacts = $data_client -> exportDonations();			
-
-			// headers
-			$keys = array_keys($contacts[0]);
-			echo implode(',', $keys) . "\n";
-
-			foreach($contacts as $contact){
-				echo implode(',', $contact) . "\n"; 
-			}
-
-			exit;		
-		}
-
-	}
-	
+// LOAD THE APP
+add_action( 'init', 'load_rkvoters' );
+function load_rkvoters() {
+	global $rkvoters_model;
+	$rkvoters_model = new RKVoters_Model();
 }
 
 
+
+// RENDER THE TEMPLATE
 function rkvoters_template_main(){
-	global $isAdmin;
-	if(!$isAdmin) {
-		echo "please login...";
+
+	// Grab the data model
+	global $rkvoters_model;
+	$rkvoters_model -> loadPlugin();
+	load_rkvoters_client();
+
+	// If you're not logged in, load the login screen
+	if(!$rkvoters_model -> current_user -> isLoggedIn) {
+		wp_enqueue_script('loggedout-js', plugins_url("client/loggedout/logged-out.js", __FILE__));
+		include('client/loggedout/logged-out.php');
 		return;
 	}
-	$data_client = new RKVoters_Client();
-	$rkvoters_data['streets'] = $data_client -> getStreetList();
-	$rkvoters_data['turfs'] = $data_client -> getTurfList();	
-	include('templates/tpl-main.php');
+
+	// If you are, load the main app interface
+	include('client/templates/tpl-main.php');
 }
 add_shortcode( 'rkvoters', 'rkvoters_template_main' );
+
+
+
+
+function load_rkvoters_client(){
+
+	/* GOOGLE FONTS */
+	$query_args = array(
+		'family' => 'Open+Sans',
+		'subset' => 'latin,latin-ext',
+	);
+	wp_enqueue_style(
+		'rkvoters_google_fonts',
+		add_query_arg( $query_args, "//fonts.googleapis.com/css" )
+	);
+
+
+	/* ENQUEUE FRAMEWORK */
+	wp_enqueue_script("jquery");
+	wp_enqueue_script('angularjs', "//ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js");
+	wp_enqueue_script('angularbootstrap', plugins_url("client/third_party/ui-bootstrap-custom-tpls-2.5.0.min.js", __FILE__));
+	wp_enqueue_style('angularbootstrapcss', plugins_url("client/third_party/ui-bootstrap-custom-2.5.0-csp.css", __FILE__));
+	wp_enqueue_style('bootstrapcss', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+
+	/* ENQUEUE APP */
+	wp_enqueue_style( 'rkvoters_google_fonts' );
+	wp_enqueue_style( 'rkvoters_css', plugins_url('client/rkvoters.css', __FILE__) );
+	wp_enqueue_script('rkvoters_js', plugins_url('client/rkvoters.js', __FILE__));
+}
+
+
+// BOUNCE LOWER LEVEL USERS
+add_action( 'wp_loaded', 'bounce_subscribers');
+function bounce_subscribers() {
+    if ( is_admin() ) { 
+
+    	$user = wp_get_current_user();
+
+		// Is the user an administrator?
+		$user -> isAdmin = in_array( 'administrator', (array) $user->roles );
+
+		if(!$user -> isAdmin) {
+			header('Location: ' . site_url());
+			exit;
+		}
+    }
+}
