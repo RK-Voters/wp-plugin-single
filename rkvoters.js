@@ -1,5 +1,5 @@
 
-var api = "/dion_data/api/app.php";
+var api = "http://159.89.38.12/api/app.php";
 
 var app = angular.module('RKVApp', ['ui.bootstrap']);
 
