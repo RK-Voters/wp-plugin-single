@@ -1,19 +1,15 @@
 
-var api = "http://159.89.38.12/api/app.php";
 
 var app = angular.module('RKVApp', ['ui.bootstrap']);
 
-app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '$modal',
-	function($scope, $http, $sce, $rootScope, $window, $modal){
+app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '$uibModal',
+	function($scope, $http, $sce, $rootScope, $window, $uibModal){
 		
 		// INIT STATE
 		var $ = jQuery;
 		$scope.init = function(){			
 			$rootScope.appScope = $scope;
 			$scope.people = {};
-			$scope.rkvoters_data = rkvoters_data;
-
-
 		
 			$rootScope.query = {
 				firstname : "",
@@ -48,9 +44,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 
 
 
-		$scope.runApi = function(request, f){
-			$http.post(api, request).then(function(response){ f(response.data)});
-		}
+		
 
 		
 		// DATA MODEL
@@ -201,6 +195,34 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 				$scope.updateMap($scope.listRequest.street_name);
 			}
 		}
+
+
+		// API
+		$scope.runApi = function(request, callback){
+			request.access_token = rkvoters_config.access_token;
+			request.campaign_slug = rkvoters_config.campaign_slug;
+			$http({
+				method: 'POST',
+				url: rkvoters_config.api_url,
+				data: request
+			}).then(
+				function successCallback(response) {
+					if(!("error" in response.data)){
+						callback(response.data);
+						return;
+					}
+					$scope.handleApiError(response);
+				},
+				function errorCallback(response) {
+					$scope.handleApiError(response);
+				}
+			);
+		}
+
+		$scope.handleApiError = function(response){
+			console.log(response);
+		}
+
 		
 		$scope.openPerson = function(person){
 		
@@ -225,24 +247,24 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 				}
 				$scope.load_person(person);
 				$scope.featured_person = person;					
-				$modal.open({
-					template: $('#modal_template').html(),
+				$uibModal.open({
+					templateUrl: rkvoters_config.template_dir + 'modal-person.php',
 					controller: 'FeaturePersonCtrl',
 				});			
 			});
 		}
 		
 		$scope.openListManager = function(){								
-			$modal.open({
-				template: $('#modal_listManager').html(),
+			$uibModal.open({
+				templateUrl: kvoters_config.template_dir + 'modal-listmgr.php',
 				controller: 'ListManagerCtrl',
 			});			
 		}
 		
 		$scope.openPersonAdder = function(){
 			$rootScope.mode = 'Add';
-			$modal.open({
-				template: $('#modal_personAdder').html(),
+			$uibModal.open({
+				templateUrl: rkvoters_config.template_dir + 'modal-personeditor.php',
 				controller: 'PersonAdderCtrl'
 			});		
 		}
@@ -262,8 +284,8 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 
 		$scope.openSearchForm = function(){
 			$rootScope.mode = 'Search';
-			$modal.open({
-				template: $('#modal_searchForm').html(),
+			$uibModal.open({
+				templateUrl: rkvoters_config.template_dir + 'modal-search.php',
 				controller: 'SearchFormCtrl'
 			});		
 		}
@@ -275,8 +297,8 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 ]);
 
 app.controller('ListManagerCtrl', 
-	['$scope', '$rootScope', '$modal',
-		function($scope, $rootScope, $modal){
+	['$scope', '$rootScope', '$uibModal',
+		function($scope, $rootScope, $uibModal){
 			var $ = jQuery;		
 			
 			$scope.litbomb = {};	
@@ -318,8 +340,8 @@ app.controller('ListManagerCtrl',
 );
 
 app.controller('PersonAdderCtrl', 
-	['$scope', '$rootScope', '$modal',
-		function($scope, $rootScope, $modal){
+	['$scope', '$rootScope', '$uibModal',
+		function($scope, $rootScope, $uibModal){
 			var $ = jQuery;		
 			
 			var st = $rootScope.appScope.listRequest.street_name;
@@ -351,8 +373,8 @@ app.controller('PersonAdderCtrl',
 );
 
 app.controller('FeaturePersonCtrl', 
-	['$scope', '$rootScope', '$modal',
-		function($scope, $rootScope, $modal){
+	['$scope', '$rootScope', '$uibModal',
+		function($scope, $rootScope, $uibModal){
 			var $ = jQuery;			
 			$scope.person = $rootScope.appScope.featured_person;
 			$scope.newContact = {
@@ -362,16 +384,16 @@ app.controller('FeaturePersonCtrl',
 			$scope.editBasicInfo = function(){
 				$scope.$close();
 				$rootScope.mode = 'Edit';
-				$modal.open({
-					template: $('#modal_personAdder').html(),
+				$uibModal.open({
+					templateUrl: rkvoters_config.template_dir + 'modal-personeditor.php',
 					controller: 'FeaturePersonCtrl'
 				});
 			}
 			
 			$scope.goBack = function(){			
 				$scope.$close();
-				$modal.open({
-					template: $('#modal_template').html(),
+				$uibModal.open({
+					templateUrl: rkvoters_config.template_dir + 'modal-person.php',
 					controller: 'FeaturePersonCtrl',
 				});
 			}
@@ -489,8 +511,8 @@ app.controller('FeaturePersonCtrl',
 
 
 app.controller('SearchFormCtrl', 
-	['$scope', '$rootScope', '$modal',
-		function($scope, $rootScope, $modal){
+	['$scope', '$rootScope', '$uibModal',
+		function($scope, $rootScope, $uibModal){
 			var $ = jQuery;		
 
 			$scope.counties = ['Androscoggin', 'Aroostook', 'Cumberland', 'Franklin', 'Hancock', 'Kennebec','Knox',  'Lincoln', 'Oxford', 

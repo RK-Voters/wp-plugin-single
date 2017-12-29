@@ -12,6 +12,6 @@
   }
   else {
     $rkvoters_config = array(
-      "api_url" => "http://localhost/biz/_rkvoter/data-api/api/app.php"
+      "api_url" => "http://localhost/dion_data/api/app.php"
     );
   }

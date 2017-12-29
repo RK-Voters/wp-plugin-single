@@ -15,6 +15,15 @@
     -moz-appearance: checkbox; -webkit-appearance: checkbox; -ms-appearance: checkbox; appearance: checkbox; }
 
 
+
+/* TOP LINE */
+.innerFrame 			{ padding: 0; width: 1200px; }
+.interface_controller 	{ line-height: 40px; text-align: left; float: left }
+.interface_btns 		{  }
+.interface_btns button 	{ margin: 0 0 0 15px; }
+
+
+
 .submit_error {
 	border: solid 1px red;
 }
@@ -24,7 +33,13 @@
 .result { padding: 7px 15px 15px; border-top: solid 1px #ccc; font-size: 12px; page-break-inside: avoid; }
 .addressResult:hover { cursor: default; background: white; }
 .addressResident:hover { cursor: pointer; text-decoration: underline; }
-.innerFrame { padding: 0; }
+
+
+
+
+
+
+
 .support_level 	{ height: 30px; width: 30px; border: solid 1px #444;
 				border-radius: 15px; text-align: center; padding-top: 6px; }
 .support_level span { display: none; }
@@ -46,7 +61,14 @@
 }
 
 .interaction_count { text-align: center; color: #999; font-size: 12px; margin-top: 5px; }
-.modal-dialog { width: 900px; max-width: 95%; }
+
+
+
+/* MODAL - Enable Different Width Modals */
+.modal 			{ text-align: center; }
+
+.modal-dialog 	{ display: inline-block; }
+
 .modalFrame { padding: 15px; }
 .modalFrame .field 	{ padding-top: 15px; }
 .modalFrame  input 	{ width: 100%; }
@@ -61,19 +83,7 @@ label { margin: 15px 0 2px; }
 	
 }
 
-.search_container {
-	text-align: center;
-	background: #eee;
-}
 
-#search_form {
-	text-align: left;
-	padding: 20px 50px;
-	
-	font-family: arial;
-	display: inline-block;
-	margin: 0 auto;
-}
 input {
 	height: 30px;
 	padding: 0 10px;
@@ -105,10 +115,7 @@ button, .button {
 	margin: 10px 0px;
 }
 
-.subhead {
-	font-weight: bold;
-	margin: 30px 15px 0;
-}
+
 
 .checkbox {
 	width: 20px;
@@ -126,3 +133,50 @@ label {
 */	display: block;
 
 }
+
+
+/* SEARCH CONTAINER */
+.search_container {
+	text-align: center;
+	background: #eee;
+}
+
+#search_form {
+	text-align: left;
+	padding: 20px 40px;
+	font-family: arial;
+	display: inline-block;
+	margin: 0 auto;
+}
+
+#search_form select {
+	margin: 10px 10px 0 0;
+	width: 150px;
+}
+
+#search_form .textInput {
+	margin: 10px 10px 0 0;	
+	width: 150px;
+}
+#search_form select:last-child,  #search_form .textInput:last-child {
+	margin-right: 0;
+}
+
+#search_form table {
+	margin: 0;
+}
+
+#search_form td {
+	padding: 0 5px;
+}
+
+#search_form td label {
+	margin-right: 20px;
+}
+
+#search_form .subhead {
+	font-weight: bold;
+	margin: 30px 15px 0 0;
+}
+
+

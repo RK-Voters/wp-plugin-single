@@ -90,6 +90,7 @@
 
 			$clientdata = array(
 				"api_url" => $rkvoters_config['api_url'],
+				"template_dir" => plugins_url() . "/rkvoters/client/templates/",
 				"user_wpid" => $this -> current_user -> ID,
 				"user_name" => $this -> current_user -> user_login,
 				"access_token" => $this -> current_user -> rkvoters_access_token,
