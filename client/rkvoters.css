@@ -20,7 +20,7 @@
 .innerFrame 			{ padding: 0; width: 1200px; }
 .interface_controller 	{ line-height: 40px; text-align: left; float: left }
 .interface_btns 		{  }
-.interface_btns button 	{ margin: 0 0 0 15px; }
+.interface_btns .rkbutton 	{ margin: 0 0 0 15px; }
 
 
 
@@ -53,7 +53,7 @@
 .modal-content {
 	display: inline-block;
 	text-align: left;
-	margin-top: 60px;
+	margin-top: 5px;
 }
 
 .modal-dialog {
@@ -83,8 +83,14 @@ label { margin: 15px 0 2px; }
 	
 }
 
+.neighbors {
+	font-size: 11px;
+}
+.neighbors ul {
+	padding: 0 0 0 15px;
+}
 
-input {
+.textInput {
 	height: 30px;
 	padding: 0 10px;
 	line-height: 30px;
@@ -96,10 +102,9 @@ select {
 	height: 30px;
 	font-size: 14px;
 	width: 180px;
-	margin: 10px;
 }
 
-button, .button {
+.rkbutton {
 	height: 40px;
 	text-align: center;
 	color: white;
@@ -107,6 +112,19 @@ button, .button {
 	border: solid 1px #ccc;
 	float: right;
 	margin: 20px 0 10px;
+	padding: 0 20px;
+	font-size: 14px;
+}
+
+
+.personModal {
+}
+
+.personModal .rkbutton {
+	color: #4683ea;
+	background: #eee;
+	font-weight: bold;
+	height: 30px; padding: 0 15px; font-size: 12px;
 }
 
 .header {
@@ -129,9 +147,10 @@ table {
 label {
 	line-height: 20px;
 	font-size: 12px;
-/*	width: 120px;
-*/	display: block;
+}
 
+textarea {
+	border: solid 1px #ccc;
 }
 
 
@@ -177,6 +196,15 @@ label {
 #search_form .subhead {
 	font-weight: bold;
 	margin: 30px 15px 0 0;
+}
+
+.uib-daypicker {
+	outline: none;
+	padding: 15px 15px 5px 0;
+}
+
+.uib-datepicker-popup {
+	padding-bottom: 10px;
 }
 
 

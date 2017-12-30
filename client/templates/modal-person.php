@@ -1,9 +1,10 @@
-<div class="modalFrame clearfix">
+<div class="modalFrame clearfix personModal">
 
 	<!-- TOP LEFT -->
-	<div class="col-md-6">
-		<b>{{person.firstname}} {{person.lastname}}</b>
+	<div class="col-md-9" style="color: #666;">
+		<b style="font-size: 18px; color: black;">{{person.firstname}} {{person.lastname}}</b>
 		- <a ng-click="editBasicInfo()">EDIT</a>
+		- <a ng-click="removePerson()">DELETE</a>
 		<div>
 			<span ng-if="person.phone">- {{person.phone}}</span>
 			<span ng-if="person.phone2"> - {{person.phone2}}</span>
@@ -17,14 +18,11 @@
 	</div>
 
 	<!-- TOP RIGHT -->
-	<div class="col-md-6" style="text-align: right;">
+	<div class="col-md-3" style="text-align: right;">
 		<div style="padding: 0 5px 10px;">
 			<a ng-click="openPrev()">&lt;&lt;</a>
 			&nbsp;&nbsp;&nbsp;
 			<a ng-click="openNext()">&gt;&gt;</a>
-		</div>
-		<div style="clear: both;">
-			<button ng-click="removePerson()" style="float: right">Remove from List</button>
 		</div>
 	</div>
 
@@ -61,7 +59,7 @@
 			<br />
 			<textarea ng-model="person.bio" style="height: 60px;"></textarea>
 		</div>
-		<div class="col-md-9">
+		<div class="col-md-12">
 			<label>
 				<input id="volunteer_check" ng-model="person.volunteer" type="checkbox" style="width: 20px" 
 						 ng-true-value="'true'" ng-false-value="''"/>&nbsp;
@@ -86,26 +84,28 @@
 				Other
 			</label>
 
-
-			<br /><br />
-			<button ng-click="savePerson(1)">Save & Close</button>
-			<button ng-click="savePerson(2)">Save & Next</button>
 		</div>
-		<div class="col-md-6" ng-if="person.neighbors">
-			<br />
-			<b>Folks at the same number \ address:</b>
-			<ul>
-				<li ng-repeat="neighbor in person.neighbors">
-					{{neighbor.support_level}} - {{neighbor.residentLabel}} -  - <i>{{neighbor.bio}}</i>
-				</li>
-			</ul>
+		<div class="col-md-6">
+			<div  ng-if="person.neighbors" class="neighbors">
+				<br />
+				<i>Folks at the same number \ address:</i>
+				<ul>
+					<li ng-repeat="neighbor in person.neighbors" ng-click="openNeighbor(neighbor)">
+						{{neighbor.support_level}} - {{neighbor.residentLabel}} <i>{{neighbor.bio}}</i>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<button ng-click="savePerson(2)" class="rkbutton" >Save & Next</button>
+			<button ng-click="savePerson(1)"  class="rkbutton" style="margin-right: 10px">Save & Close</button>
 		</div>
 	</div>
 
 	<!-- BOTTOM SECTION - CONTACT MANAGER -->
 	<div class="bottomSection">
 		<div class="col-md-6">
-			<div>
+			<!-- <div>
 				<select ng-model="person.closed">
 					<option value="0">Person is Open</option>
 					<option value="1">Person is Closed</option>						
@@ -113,8 +113,7 @@
 				<br /><br />
 			</div>
 		
-			<h2>Add Contact</h2>
-			<b>Type:</b>
+			<i>Add Contact</i> -->
 			<select ng-model="$root.contactType">
 				<option>Attended Event</option>
 				<option>Chat at Door</option>
@@ -130,15 +129,14 @@
 			</select>
 			
 			<br /><br />
-			
-			<b>Date:</b>
-			<br />
-			<input 
-			type="text" class="form-control" 
-			datepicker-popup="shortDate" 
-			ng-model="newContact.datetime" 
-			close-text="Close" 
-			placeholder="Enter date..." />
+
+			<input 	type="text" class="form-control"
+					is-open="focus" ng-focus="focus=true"
+					uib-datepicker-popup="shortDate"
+					ng-model="newContact.datetime"
+					close-text="Close"
+					placeholder="Enter date..." />
+
 
 			<div ng-if="$root.contactType == 'Donation'">
 				<br />
@@ -147,11 +145,10 @@
 			</div>
 
 			<div ng-if="$root.contactType == 'Attended Event'" style="margin: 10px 0">
-				<input ng-model="$root.event_name" placeholder="EVENT NAME" />
+				<input ng-model="$root.event_name" placeholder="Event Name..." />
 			</div>
 
 			<br />
-			<b>Note:</b>
 			<select ng-if="$root.contactType == 'Phone Call'" ng-model="$root.callstatus" 
 					style="margin: 0 0 10px">
 				<option>Connection</option>
@@ -163,17 +160,18 @@
 				<option>Bad Number</option>
 			</select>
 			<br />
-			<textarea ng-model="newContact.note"></textarea>
+			<textarea ng-model="newContact.note" placeholder="Note..."></textarea>
 										
-			<br /><br />
-			<button ng-click="recordContact()">Post</button>
-			&nbsp;&nbsp; <button ng-click="recordContact(1)">Post & Next</button>
+			<br />
+			<button  class="rkbutton" ng-click="recordContact(1)">Post & Next</button>
+			<button  class="rkbutton" ng-click="recordContact()" style="margin-right: 10px">Post</button>
+			
 			
 		</div>
 
 
 		<div class="col-md-6" style="border-left: dashed 1px #ccc;">
-			<h2>Log</h2>
+			<i>Log</i>
 			<div ng-repeat="contact in person.contacts">
 				<i>{{contact.datetime.split(' ')[0]}}</i> - 
 				<a ng-click="deleteContact(contact)">X</a>
@@ -194,7 +192,7 @@
 					${{contact.amount}}
 				</span>
 				<span ng-if="contact.userName != 0">
-					<i>- {{contact.userName}}</i>
+					<i>- {{contact.user_name}}</i>
 				</span>
 				<br /><br />
 			</div>

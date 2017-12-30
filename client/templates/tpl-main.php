@@ -22,9 +22,9 @@
 			</a>
 		</div>
 		<div class="interface_btns clearfix">
-			<button ng-click="openSearchForm()">SEARCH</button>
+			<button class="rkbutton" ng-click="openSearchForm()">SEARCH</button>
 			
-			<button ng-click="openPersonAdder()">ADD PERSON</button>
+			<button class="rkbutton"  ng-click="openPersonAdder()">ADD PERSON</button>
 
 		</div>
 	</div>
@@ -48,140 +48,14 @@
 		</div>
 	
 		<div class="results clearfix">
-			<div ng-if="$root.viewMode == 'individuals'">	
-				<div class="col-sm-8" style="font-size: 11px">
-					<div ng-repeat="person in knocklist.people">
-						<span class="support_level{{person.support_level}}">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						</span>&nbsp;
-						<span ng-click="openPerson(person, $index)" style="font-weight: bold; text-transform: uppercase;">{{person.firstname}} {{person.lastname}}</span>
-						<span ng-if="!person.firstname" ng-click="openPerson(person, $index)" style="font-weight: bold; text-transform: uppercase;">{{person.email}} </span>
-
-						<br />{{person.profession}} - {{person.employer}}
-						<br />
-						<span ng-if="person.phone != ''"> - {{person.phone}}</span>
-						<span ng-if="person.phone2 != ''"> - {{person.phone2}}</span>
-						<div ng-if="person.bio">{{person.bio}}</div>
-						
-						<br /><br />
-					</div>
-				</div>
-			</div>
-		
-			<div ng-if="$root.viewMode == 'mark absentees'"> 
-				<div ng-repeat="address in knocklist.addresses">	
-					<div class="result addressResult col-sm-4 clearfix">
-						<b ng-click="getAddress(address)">{{address.address}}</b>
-						<div ng-repeat="person in address.residents" 
-							ng-if="person.active">
-							<div class="person{{person.support_level}}">
-								<span class="support_level{{person.support_level}}">
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								</span>
-								&nbsp;
-								<span ng-click="openPerson(person, $index)">{{person.residentLabel}}</span>
-								- <span ng-click="setsupport_level(4, person)" class="addressResident" >P</span>
-								- <span ng-click="setsupport_level(5, person)" class="addressResident" >V</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		
-			<div ng-if="$root.viewMode == 'addresses'"> 
-				<div ng-repeat="address in knocklist.addresses">
-			
-					<div class="result addressResult col-sm-4 clearfix">
-						<b ng-click="getAddress(address)">{{address.address}}</b>
-						<div ng-repeat="person in address.residents" 
-							class="addressResident" ng-if="person.active">
-							<div ng-click="openPerson(person)" class="person{{person.support_level}}">
-								<span class="support_level{{person.support_level}}">
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								</span>
-								&nbsp;{{person.residentLabel}}
-							</div>
-						</div>
-					</div>
-
-					<div class="clearfix" ng-if="$index % 3 == 2"></div>
-
-				</div>
-
-				<div ng-repeat="person in knocklist.contacts" style="clear: both; font-size: 11px">
-					<br /><br />
-					<b style="text-transform: uppercase;" ng-click="openPerson(person, $index)">{{person.firstname}} {{person.lastname}}</b> - {{person.enroll}} - {{person.age}}
-					
-					<br />support_level: {{person.support_level}}
-					<br />{{person.bio}}
-				</div>
-			</div>
-		</div>
-		
-		<div ng-if="$root.viewMode == 'knocknotes'"> 
-			<div ng-repeat="address in knocklist.addresses" style="clear:both;" class="result clearfix">
-				<div class="addressResult col-sm-4 clearfix">
-					<b ng-click="getAddress(address)">{{address.address}}</b>
-					<div ng-repeat="person in address.residents" 
-						class="addressResident" ng-if="person.active">
-						<div ng-click="openPerson(person)" class="person{{person.support_level}}">
-							<span class="support_level{{person.support_level}}">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							</span>
-							&nbsp;{{person.residentLabel}}
-						</div>
-					</div>
-				</div>
-
-				<div class="col-sm-8" style="font-size: 11px">
-					<div ng-repeat="person in address.residents" ng-if="person.support_level != 0">
-						<b style="text-transform: uppercase;">{{person.firstname}} {{person.lastname}}</b>
-						<span ng-if="person.phone != ''"> - {{person.phone}}</span>
-						<br />support_level: {{person.support_level}} - {{person.bio}}
-						<br /><br />
-					</div>
-				</div>
-				<div class="clearfix" ng-if="$index % 3 == 2"></div>
-			</div>
-		</div>
-		
-		<div ng-if="$root.viewMode == 'multi-sheet'"> 
-			<div ng-repeat="street in street_sets" style="clear:both; page-break-inside: auto" class="result clearfix">
-			
-				<h3>{{street.street_name}}</h3>
-				<iframe
-				  width="100%"
-				  height="300"
-				  frameborder="0" style="border:0"
-				  ng-src="{{street.safeUrl}}" allowfullscreen>
-				</iframe>
-			
-				<div ng-repeat="address in street.addresses" style="clear:both;" class="result clearfix">
-					<div class="addressResult col-sm-5 clearfix">
-						<b ng-click="getAddress(address)">{{address.address}}</b>
-						<div ng-repeat="person in address.residents" 
-							class="addressResident" ng-if="person.active">
-							<div ng-click="openPerson(person)" class="person{{person.support_level}}">
-								<span class="support_level{{person.support_level}}">
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								</span>
-								&nbsp;{{person.residentLabel}}
-							</div>
-						</div>
-					</div>
-
-					<div class="col-sm-7" style="font-size: 11px">
-						<div ng-repeat="person in address.residents" ng-if="person.support_level != 0">
-							<b style="text-transform: uppercase;">{{person.firstname}} {{person.lastname}}</b>
-							<br />support_level: {{person.support_level}} - {{person.bio}}
-							<br /><br />
-						</div>
-					</div>
-					<div class="clearfix" ng-if="$index % 3 == 2"></div>
-				</div>
-				
-				<div style="page-break-after: always;">&nbsp;&nbsp;</div>
-			</div>
+			<?php
+				$views = array("individuals", "absentees", "addresses", "knocknotes", "multisheet");
+				foreach($views as $v){
+					echo '<div ng-if="$root.viewMode == \'' . $v . '\'">';
+					include("list-$v.php");
+					echo '</div>';
+				}
+			?>
 		</div>
 			
 	</div>
@@ -201,7 +75,7 @@
 						<option value="emailLocalSupporters">EMAIL LOCAL SUPPORTERS</option>
 						<option value="mailingList">MAILING LIST</option>
 					</select>
-					<button ng-click="updateTotals()">UPDATE TOTALS</button>
+					<button  class="rkbutton" ng-click="updateTotals()">UPDATE TOTALS</button>
 				</div>
 				<form action="" target="_blank" style="float: left; margin-left: 5px;">
 					<input type="hidden" name="export" value="emails" />

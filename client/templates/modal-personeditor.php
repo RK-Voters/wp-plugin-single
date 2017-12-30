@@ -1,6 +1,7 @@
 <div class="modalFrame clearfix">
-	<h2>{{$root.mode}} Person 
-		<span ng-if="$root.mode == 'Edit'">- <a ng-click="goBack()">Back</a></span>:</h2>
+	<div><b style="font-size: 18px">{{$root.mode}} Person 
+		<span ng-if="$root.mode == 'Edit'">- <a ng-click="goBack()">Back</a></span>:
+	</div>
 
 	<div class="col-md-6">
 		<label>First Name</label>

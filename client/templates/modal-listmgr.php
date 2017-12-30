@@ -7,8 +7,8 @@
 			<option>addresses</option>
 			<option>individuals</option>
 			<option>knocknotes</option>
-			<option>mark absentees</option>
-			<option>multi-sheet</option>								
+			<option value="absentees">mark absentees</option>
+			<option value="multisheet">multi-sheet</option>								
 		</select>
 	</div>
 	

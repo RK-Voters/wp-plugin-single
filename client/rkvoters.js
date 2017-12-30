@@ -14,15 +14,19 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			$rootScope.query = {
 				firstname : "",
 				lastname : "",
-				support_level : "0",
-				enroll : "D",
-				sex : "M",
-				age_range: "80+",
-				volunteer: true,
-				wants_sign: true,
-				host_event: true,
+				support_level : "Support Level",
+				enroll : "Party",
+				sex : "Gender",
+				age_range: "Age",
+				
+				active: true,
 				has_phone: true,
 				never_called: true,
+
+				volunteer: false,
+				wants_sign: false,
+				host_event: false,
+
 				stnum: "",
 				stname: "",
 				city: "",
@@ -66,7 +70,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 				if(person.support_level != 0) $scope.knocklist.contacts.push(person);
 				
 				// load address block
-				var addr = person.stnum + ' ' + person.stname;
+				var addr = person.stnum + ' ' + person.stname  + ", " + person.city + ", " + person.state + ' ' + person.zip;
 				if(addr != current_addr.address){
 					if(current_addr.address != '') {
 						$scope.knocklist.addresses.push(current_addr);
@@ -110,7 +114,8 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 		}
 
 		$scope.load_person = function(person){
-			person.age = (person.yob) ? 2015 - person.yob : false;
+			var yob = person.dob.split('-')[0];
+			person.age = (yob) ? 2018 - yob : '';
 			person.address = person.stnum + ' ' + person.stname;
 			person.residentLabel = '';
 			if(person.unit != '') {
@@ -130,6 +135,11 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			
 			if(!('active' in person)) person.active = true;
 			
+			var cb_fields = ["volunteer", "wants_sign", "host_event", "volunteer_other"];
+			$.each(cb_fields, function(i, f){ 
+				person[f] = (person[f] == "1") ? "true" : '';
+			});
+
 			
 			if(!(person.rkid in $scope.people)){
 				$scope.people[person.rkid] = {};
@@ -137,6 +147,12 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			
 			for(var field in person){
 				$scope.people[person.rkid][field] = person[field];
+			}
+
+			if(person.neighbors){
+				$.each(person.neighbors, function(k, neighbor){
+					$scope.load_person(neighbor);
+				})
 			}
 			
 		}
@@ -178,7 +194,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			}
 			if(componentName == 'knocklist'){
 				$scope.showMap = -1;
-				$rootScope.viewMode = 'individuals';				
+				$rootScope.viewMode = 'knocknotes';				
 			}
 		}
 		
@@ -201,6 +217,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 		$scope.runApi = function(request, callback){
 			request.access_token = rkvoters_config.access_token;
 			request.campaign_slug = rkvoters_config.campaign_slug;
+			request.user_name = rkvoters_config.user_name;
 			$http({
 				method: 'POST',
 				url: rkvoters_config.api_url,
@@ -240,11 +257,6 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			}
 
 			$scope.runApi(request, function(person){
-				if(person.neighbors){
-					$.each(person.neighbors, function(k, neighbor){
-						$scope.load_person(neighbor);
-					})
-				}
 				$scope.load_person(person);
 				$scope.featured_person = person;					
 				$uibModal.open({
@@ -256,7 +268,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 		
 		$scope.openListManager = function(){								
 			$uibModal.open({
-				templateUrl: kvoters_config.template_dir + 'modal-listmgr.php',
+				templateUrl: rkvoters_config.template_dir + 'modal-listmgr.php',
 				controller: 'ListManagerCtrl',
 			});			
 		}
@@ -278,7 +290,6 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 				turf.state = 'closed';
 				turf.toggle_command = 'open';
 			}
-			//if(!dontupdate) $scope.$digest();
 		}
 
 
@@ -314,7 +325,7 @@ app.controller('ListManagerCtrl',
 					$.each($rootScope.appScope.knocklist.people, function(i, person){
 						request.rkids.push(person.rkid);
 					});
-					$.post('', request, function(revisedList){
+					$scope.appScope.runApi(request, function(revisedList){
 						$rootScope.appScope.load_knocklist(revisedList);
 						$scope.$close();
 					}, 'json');					
@@ -327,7 +338,7 @@ app.controller('ListManagerCtrl',
 						api: 'send_postcards',
 						listRequest: $rootScope.appScope.listRequest
 					}
-					$.post('', request, function(revisedList){
+					$scope.appScope.runApi(request, function(revisedList){
 						$rootScope.appScope.load_knocklist(revisedList);
 						$scope.$close();
 					}, 'json');					
@@ -361,10 +372,10 @@ app.controller('PersonAdderCtrl',
 					person: $scope.person,
 					listRequest: $rootScope.appScope.listRequest
 				}
-				$.post('', request, function(revisedList){
+				$rootScope.appScope.runApi(request, function(revisedList){
 					$rootScope.appScope.load_knocklist(revisedList);
 					$scope.$close();
-				}, 'json');
+				});
 			}
 
 			
@@ -407,13 +418,12 @@ app.controller('FeaturePersonCtrl',
 					person : $scope.person,
 					listRequest: $rootScope.appScope.listRequest
 				}
-				$.post('', request, function(person){
+				$rootScope.appScope.runApi(request, function(person){
 					$scope.person = person;
 					$rootScope.appScope.load_person(person);
-					$scope.$digest();
 					if(mode == 1) $scope.$close();
 					if(mode == 2) $scope.openNext();
-				}, 'json');
+				});
 			}
 			
 			// record contact
@@ -435,11 +445,10 @@ app.controller('FeaturePersonCtrl',
 					contact : $scope.newContact,
 					person : $scope.person
 				}
-				$.post('', request, function(person){
+				$scope.appScope.runApi(request, function(person){
 					$scope.newContact = { }; 
 					$scope.person = person;
 					$rootScope.appScope.load_person(person);
-					$scope.$digest();
 					if(progress) $scope.openNext();				
 				}
 				, 'json');
@@ -473,6 +482,11 @@ app.controller('FeaturePersonCtrl',
 				$rootScope.appScope.openPerson(p);					
 			}
 			
+			$scope.openNeighbor = function(neighbor){
+				$scope.$close();
+				$rootScope.appScope.openPerson(neighbor);	
+			}
+
 			// remove
 			$scope.removePerson = function(){
 				if(confirm('Are you sure you want to remove this person?')){
@@ -481,12 +495,12 @@ app.controller('FeaturePersonCtrl',
 						rkid : $scope.person.rkid,
 						listRequest: $rootScope.appScope.listRequest
 					}
-					$.post('', request, function(response){
+					$scope.appScope.runApi(request, function(response){
 						if(response.support_level == 'deleted'){
 							$rootScope.appScope.load_knocklist(response.knocklist);
 							$scope.$close();
 						}
-					}, 'json');
+					});
 				}
 			}
 			
@@ -497,11 +511,10 @@ app.controller('FeaturePersonCtrl',
 					vc_id : contact.vc_id,
 					rkid: contact.rkid
 				}
-				$.post('', request, function(person){
+				$scope.appScope.runApi(request, function(person){
 					$scope.newContact = {}; 
 					$scope.person = person;
 					$rootScope.appScope.load_person(person);
-					$scope.$digest();								
 				}
 				, 'json');
 			}
