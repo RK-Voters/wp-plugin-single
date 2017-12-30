@@ -7,7 +7,7 @@
 
   if($cwd == "/var/www/html"){
     $rkvoters_config = array(
-      "api_url" => "http://174.138.68.14/api/app.php"
+      "api_url" => "http://159.89.38.12/api/app.php"
     );
   }
   else {
