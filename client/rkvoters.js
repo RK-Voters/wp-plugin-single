@@ -421,6 +421,11 @@ app.controller('FeaturePersonCtrl',
 				$rootScope.appScope.runApi(request, function(person){
 					$scope.person = person;
 					$rootScope.appScope.load_person(person);
+
+					var p = $rootScope.appScope.knocklist.people;
+					p[$rootScope.appScope.selected_index] = person;
+					$rootScope.appScope.load_knocklist(p);
+
 					if(mode == 1) $scope.$close();
 					if(mode == 2) $scope.openNext();
 				});
