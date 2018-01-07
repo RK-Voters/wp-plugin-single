@@ -1,5 +1,5 @@
 <div class="modalFrame clearfix">
-	<div><b style="font-size: 18px">{{$root.mode}} Person 
+	<div><b style="font-size: 18px">{{$root.mode}} Person</b> 
 		<span ng-if="$root.mode == 'Edit'">- <a ng-click="goBack()">Back</a></span>:
 	</div>
 
@@ -40,8 +40,10 @@
 		<select ng-model="person.support_level">
 			<option value="0">0 - Unidentified</option>
 			<option value="1">1 - With Us</option>
-			<option value="2">2 - Undecided</option>
-			<option value="3">3 - Against Us</option>
+			<option value="2">2 - Leaning Toward Us</option>
+			<option value="3">3 - Undecided</option>
+			<option value="4">4 - Leaning Away</option>
+			<option value="5">5 - Against Us</option>
 		</select>		
 		<br />
 		<label>Party</label>

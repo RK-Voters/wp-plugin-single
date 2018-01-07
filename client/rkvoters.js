@@ -113,6 +113,26 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			
 		}
 
+		$scope.updateList = function(person){
+			$scope.person = person;
+			person = $scope.load_person(person);
+			$scope.featured_person = person;
+
+			var p = $scope.knocklist.people;
+			p[$scope.selected_index] = person;
+			$scope.load_knocklist(p);
+
+			return person;
+		}
+
+		$scope.removePersonFromList = function(){
+
+			var p = $scope.knocklist.people;
+			p.splice($scope.selected_index, 1);
+			$scope.load_knocklist(p);
+
+		}
+
 		$scope.load_person = function(person){
 			var yob = person.dob.split('-')[0];
 			person.age = (yob) ? 2018 - yob : '';
@@ -154,6 +174,8 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 					$scope.load_person(neighbor);
 				})
 			}
+
+			return person;
 			
 		}
 
@@ -355,8 +377,8 @@ app.controller('PersonAdderCtrl',
 		function($scope, $rootScope, $uibModal){
 			var $ = jQuery;		
 			
-			var st = $rootScope.appScope.listRequest.street_name;
-			if(st == 'Select Street...') st = '';
+			var st = $rootScope.appScope.query.stname;
+			
 			
 			$scope.person = {
 				stname : st,
@@ -419,12 +441,7 @@ app.controller('FeaturePersonCtrl',
 					listRequest: $rootScope.appScope.listRequest
 				}
 				$rootScope.appScope.runApi(request, function(person){
-					$scope.person = person;
-					$rootScope.appScope.load_person(person);
-
-					var p = $rootScope.appScope.knocklist.people;
-					p[$rootScope.appScope.selected_index] = person;
-					$rootScope.appScope.load_knocklist(p);
+					$scope.person = $scope.appScope.updateList(person);
 
 					if(mode == 1) $scope.$close();
 					if(mode == 2) $scope.openNext();
@@ -452,8 +469,7 @@ app.controller('FeaturePersonCtrl',
 				}
 				$scope.appScope.runApi(request, function(person){
 					$scope.newContact = { }; 
-					$scope.person = person;
-					$rootScope.appScope.load_person(person);
+					$scope.person = $scope.appScope.updateList(person);
 					if(progress) $scope.openNext();				
 				}
 				, 'json');
@@ -501,8 +517,8 @@ app.controller('FeaturePersonCtrl',
 						listRequest: $rootScope.appScope.listRequest
 					}
 					$scope.appScope.runApi(request, function(response){
-						if(response.support_level == 'deleted'){
-							$rootScope.appScope.load_knocklist(response.knocklist);
+						if(response.status == 'deleted'){
+							$scope.appScope.removePersonFromList();
 							$scope.$close();
 						}
 					});

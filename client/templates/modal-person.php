@@ -34,10 +34,10 @@
 			<select ng-model="person.support_level">
 				<option value="0">0 - Unidentified</option>
 				<option value="1">1 - With Us</option>
-				<option value="2">2 - Undecided</option>
-				<option value="3">3 - Against Us</option>
-				<option value="4">4 - Pending Absentee</option>
-				<option value="5">5 - Voted Absentee</option>					
+				<option value="2">2 - Leaning Toward Us</option>
+				<option value="3">3 - Undecided</option>
+				<option value="4">4 - Leaning Against Us</option>
+				<option value="5">5 - Against Us</option>					
 			</select>			
 		</div>
 		<div class="col-md-4  field">

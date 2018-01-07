@@ -44,11 +44,11 @@
 				border-radius: 15px; text-align: center; padding-top: 6px; }
 .support_level span { display: none; }
 .support_level0	{ }
-.support_level1	{ background: green; }
-.support_level2	{ background: yellow; }
-.support_level3	{ background: red; }
-.support_level4	{ background: #777; }	
-.support_level5	{ background: black; }		
+.support_level1	{ background: #228b22; }
+.support_level2	{ background: #adff2f; }
+.support_level3	{ background: yellow; }
+.support_level4	{ background: orange; }	
+.support_level5	{ background: red; }		
 
 .modal-content {
 	display: inline-block;

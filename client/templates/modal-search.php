@@ -7,11 +7,11 @@
 			<select ng-model="query.support_level">
 				<option>Support Level</option>
 				<option value="0">0 - Unidentified</option>
-				<option value="1">1 - With Us Strongly</option>
-				<option value="2">2 - Leaning Our Way</option>
+				<option value="1">1 - With Us</option>
+				<option value="2">2 - Leaning Toward Us</option>
 				<option value="3">3 - Undecided</option>
 				<option value="4">4 - Leaning Away</option>
-				<option value="5">5 - Opposed</option>
+				<option value="5">5 - Against Us</option>
 			</select>
 		</div>
 		<div class="rk_row">
