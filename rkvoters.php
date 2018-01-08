@@ -93,19 +93,22 @@ function load_rkvoters_client(){
 }
 
 
-// BOUNCE LOWER LEVEL USERS
-add_action( 'wp_loaded', 'bounce_subscribers');
-function bounce_subscribers() {
-    if ( is_admin() ) { 
 
-    	$user = wp_get_current_user();
 
-		// Is the user an administrator?
-		$user -> isAdmin = in_array( 'administrator', (array) $user->roles );
 
-		if(!$user -> isAdmin) {
-			header('Location: ' . site_url());
-			exit;
-		}
-    }
-}
+// BOUNCE LOWER LEVEL USERS FROM ADMIN SCREENS
+// add_action( 'wp_loaded', 'bounce_subscribers');
+// function bounce_subscribers() {
+//     if ( is_admin() ) { 
+
+//     	$user = wp_get_current_user();
+
+// 		// Is the user an administrator?
+// 		$user -> isAdmin = in_array( 'administrator', (array) $user->roles );
+
+// 		if(!$user -> isAdmin) {
+// 			header('Location: ' . site_url());
+// 			exit;
+// 		}
+//     }
+// }
