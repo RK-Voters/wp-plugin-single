@@ -7,7 +7,7 @@
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				</span>
 				&nbsp;<span class="addressResident" ng-click="openPerson(person)">{{person.residentLabel}}</span>
-				<span ng-if="person.statefileid == ''">- <a ng-click="startMerge(person)">MERGE</a></span>
+				<span ng-if="person.statefileid == ''">- <a ng-click="startMerge(person)" id="merge_{{person.rkid}}" class="merge_label">MERGE</a></span>
 			</div>
 		</div>
 	</div>

@@ -34,6 +34,7 @@
 .addressResult:hover { cursor: default; background: white; }
 .addressResident:hover { cursor: pointer; text-decoration: underline; }
 
+.active_merging { font-weight: bold; color: red; }
 
 
 

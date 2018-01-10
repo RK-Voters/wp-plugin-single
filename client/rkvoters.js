@@ -243,6 +243,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 		$scope.startMerge = function(person){
 			$scope.merge_person = person;
 			$scope.merging = true;
+			$('#merge_' + person.rkid).addClass('active_merging');
 		}
 
 
@@ -294,11 +295,13 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 						$scope.load_knocklist(list);
 						$scope.merging = false;
 						$scope.merge_person = false;
+						$('.merge_label').removeClass('active_merging');
 					});
 				}
 				else {
 					$scope.merging = false;
 					$scope.merge_person = false;
+					$('.merge_label').removeClass('active_merging');
 					return false;
 				}
 			}
