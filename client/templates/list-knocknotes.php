@@ -1,13 +1,13 @@
 <div ng-repeat="address in knocklist.addresses" style="clear:both;" class="result clearfix">
 	<div class="addressResult col-sm-4 clearfix">
 		<b ng-click="getAddress(address)">{{address.address}}</b>
-		<div ng-repeat="person in address.residents" 
-			class="addressResident" ng-if="person.active">
-			<div ng-click="openPerson(person)" class="person{{person.support_level}}">
+		<div ng-repeat="person in address.residents" >
+			<div class="person{{person.support_level}}">
 				<span class="support_level{{person.support_level}}">
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				</span>
-				&nbsp;{{person.residentLabel}}
+				&nbsp;<span class="addressResident" ng-click="openPerson(person)">{{person.residentLabel}}</span>
+				<span ng-if="person.statefileid == ''">- <a ng-click="startMerge(person)">MERGE</a></span>
 			</div>
 		</div>
 	</div>

@@ -43,6 +43,8 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			
 			$rootScope.contactType = 'Phone Call';
 			$rootScope.callstatus = 'Connection';
+			$scope.merging = false;
+			$scope.merge_person = false;
 		}			
 		$scope.init();
 
@@ -235,6 +237,16 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 		}
 
 
+
+
+		// MERGE FUNCTION
+		$scope.startMerge = function(person){
+			$scope.merge_person = person;
+			$scope.merging = true;
+		}
+
+
+
 		// API
 		$scope.runApi = function(request, callback){
 			request.access_token = rkvoters_config.access_token;
@@ -264,7 +276,35 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 
 		
 		$scope.openPerson = function(person){
-		
+
+			var goAhead = true;
+
+			if($scope.merging){
+				if(confirm("Merge " + person.firstname + ' ' + person.lastname + ' with ' + $scope.merge_person.firstname + ' ' + $scope.merge_person.lastname + '?')){
+					
+					goAhead = false;
+
+					var request = {
+						api : 'merge_people',
+						contact : $scope.merge_person,
+						voter : person,
+						listRequest: $scope.query
+					};
+					$scope.runApi(request, function(list){
+						$scope.load_knocklist(list);
+						$scope.merging = false;
+						$scope.merge_person = false;
+					});
+				}
+				else {
+					$scope.merging = false;
+					$scope.merge_person = false;
+					return false;
+				}
+			}
+
+			if(!goAhead) return false;
+			
 			if('knocklist' in $scope){
 				$.each($scope.knocklist.people, function(index, row){
 					if(row.rkid == person.rkid){
