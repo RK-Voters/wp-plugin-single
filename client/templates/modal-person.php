@@ -189,7 +189,7 @@
 					 - {{contact.note}}
 				</span>
 				<span ng-if="contact.amount != 0">
-					${{contact.amount}}
+					- ${{contact.amount}}
 				</span>
 				<span ng-if="contact.userName != 0">
 					<i>- {{contact.user_name}}</i>

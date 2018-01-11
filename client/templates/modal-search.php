@@ -7,6 +7,7 @@
 			<select ng-model="query.support_level">
 				<option>Support Level</option>
 				<option value="0">0 - Unidentified</option>
+				<option value="X">X - Identified</option>
 				<option value="1">1 - With Us</option>
 				<option value="2">2 - Leaning Toward Us</option>
 				<option value="3">3 - Undecided</option>
