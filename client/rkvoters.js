@@ -12,16 +12,19 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			$scope.people = {};
 		
 			$rootScope.query = {
+
+				print_mode : false,
+
 				firstname : "",
 				lastname : "",
 				support_level : "Support Level",
-				enroll : "Party",
+				enroll : "D",
 				sex : "Gender",
 				age_range: "Age",
 				
 				active: true,
-				has_phone: true,
-				never_called: true,
+				has_phone: false,
+				never_called: false,
 
 				volunteer: false,
 				wants_sign: false,
@@ -145,7 +148,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 				person.residentLabel += person.unit + ' - ';
 			}
 			person.residentLabel += person.firstname + ' ' + person.lastname + 
-									' - ' + person.enroll + ' - ' + person.age;
+									' - ' + person.enroll + ' - ' + person.age + person.sex;
 			
 			person.residentLabel = person.residentLabel.toUpperCase();
 			
@@ -204,6 +207,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			}
 			$scope.runApi(request, function(response){
 				$scope.load_knocklist(response);
+				if($scope.query.print_mode) $scope.printList();
 			});
 		}
 
@@ -234,6 +238,17 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			if($scope.showMap == 1){
 				$scope.updateMap($scope.listRequest.street_name);
 			}
+		}
+
+
+
+		// PRINT LIST
+		$scope.printList = function(){
+			$('#hiddenForm').html(
+				'<textarea name="payload">' + JSON.stringify($scope.knocklist.addresses) + '</textarea>' +
+				'<textarea name="query">' + JSON.stringify($scope.query) + '</textarea>' +
+				'<input name="list_size" value="' + $scope.knocklist.people.length + '" />' +
+				'<input name="api" value="print_list" />').submit();
 		}
 
 
@@ -600,6 +615,8 @@ app.controller('SearchFormCtrl',
 			$scope.query = $rootScope.query; 
 	
 			$scope.search = $rootScope.appScope.search;
+
+			$scope.printList = $rootScope.appScope.printList;
 	
 			
 		}

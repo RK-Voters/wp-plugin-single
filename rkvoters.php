@@ -39,6 +39,18 @@ add_action( 'init', 'load_rkvoters' );
 function load_rkvoters() {
 	global $rkvoters_model;
 	$rkvoters_model = new RKVoters_Model();
+
+	if(isset($_REQUEST['api']) && $_REQUEST['api'] == 'print_list'){
+		global $voter_list, $query, $list_size;
+		
+		$voter_list = json_decode(stripSlashes($_REQUEST['payload']));
+		$query = json_decode(stripSlashes($_REQUEST['query']));
+		$list_size = (int) $_REQUEST['list_size'];
+
+		include('client/templates/print_template.php');
+		exit();
+	}
+
 }
 
 

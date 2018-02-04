@@ -209,3 +209,12 @@ textarea {
 }
 
 
+
+/* PRINT STYLES - Especially important for knock lists. */
+@media print { 
+	header, .topLine { display: none !important; } 
+	.results { position: relative; display: block; }
+	.result {         -webkit-column-break-inside: avoid;
+          page-break-inside: avoid;
+               break-inside: avoid;position: relative; display: block}
+}

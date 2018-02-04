@@ -81,7 +81,17 @@
 				<option>Turf</option>
 			</select> -->
 		</div>
-		<button  class="rkbutton" ng-click="search()">SEARCH</button>
+		<div class="rk_row">
+			<table style="float: left">
+				<tr>
+					<td><input type="checkbox" id="print_ctrl" class="checkbox" ng-model="query.print_mode" /></td>
+					<td><label for="print_ctrl">Print List</label></td>
+				</tr>
+			</table>
+
+			<button class="rkbutton" ng-click="search()">SEARCH</button>
+
+		</div>
 		<div style="clear: both;"></div>
 	</div>
 </div>

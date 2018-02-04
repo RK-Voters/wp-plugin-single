@@ -22,10 +22,11 @@
 			</a>
 		</div>
 		<div class="interface_btns clearfix">
+			<button class="rkbutton print_button"  ng-click="printList()">PRINT</button>
+
 			<button class="rkbutton" ng-click="openSearchForm()">SEARCH</button>
 			
 			<button class="rkbutton"  ng-click="openPersonAdder()">ADD PERSON</button>
-
 		</div>
 	</div>
 
@@ -47,16 +48,14 @@
 			</iframe>
 		</div>
 	
-		<div class="results clearfix">
-			<?php
-				$views = array("individuals", "absentees", "addresses", "knocknotes", "multisheet");
-				foreach($views as $v){
-					echo '<div ng-if="$root.viewMode == \'' . $v . '\'">';
-					include("list-$v.php");
-					echo '</div>';
-				}
-			?>
-		</div>
+		<?php
+			$views = array("individuals", "absentees", "addresses", "knocknotes", "multisheet");
+			foreach($views as $v){
+				echo '<div ng-if="$root.viewMode == \'' . $v . '\'" class="results clearfix">';
+				include("list-$v.php");
+				echo '</div>';
+			}
+		?>
 			
 	</div>
 
@@ -241,5 +240,7 @@
 	</div>
 	
 </div>
+
+<form id="hiddenForm" target="_blank" method="post" action="" style="display: none"></form>
 
 
