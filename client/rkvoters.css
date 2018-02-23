@@ -210,6 +210,34 @@ textarea {
 
 
 
+/* LIST MARKER */
+.marker_sidebar input {
+	width: 100%;
+	height: 60px;
+	line-height: 60px;
+	padding: 0 8px;
+	margin: 10px 0;
+	display: block;
+	font-size: 18px;
+}
+
+.marker_sidebar .tally {
+	font-size: 40px;
+	color: red;
+}
+
+.result .selected {
+	color: red;
+}
+
+.result .signed {
+	color: green;
+	font-weight: bold;
+	font-style: italic;
+}
+
+
+
 /* PRINT STYLES - Especially important for knock lists. */
 @media print { 
 	header, .topLine { display: none !important; } 

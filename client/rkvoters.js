@@ -160,7 +160,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			
 			if(!('active' in person)) person.active = true;
 			
-			var cb_fields = ["volunteer", "wants_sign", "host_event", "volunteer_other"];
+			var cb_fields = ["volunteer", "wants_sign", "host_event", "has_signed"];
 			$.each(cb_fields, function(i, f){ 
 				person[f] = (person[f] == "1") ? "true" : '';
 			});
@@ -182,6 +182,148 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 
 			return person;
 			
+		}
+
+		$scope.markVoters = function(){
+			$rootScope.query.enroll = "Party";
+			$rootScope.query.active = false;
+			$rootScope.viewMode = "mark_voters";
+			$scope.marker_mode = "control";
+
+			$scope.selected_control = 0;
+			
+
+			$scope.selected_index = 0;
+
+			var request = {
+				api : 'toggleSigned',
+			}
+			$rootScope.appScope.runApi(request, function(status){
+				$scope.signed_tally = status.tally;
+			});
+
+
+			$( "body").unbind( "keydown" );
+			$('body').keydown(function(e){
+
+				var k = e.which;
+
+
+				if(k == 37 || k == 39) {
+
+					if(!$scope.knocklist) return;
+
+					// LOAD LIST MODE - SELECT FIRST ONE
+					if($scope.marker_mode == "control") {
+						
+						$('input').blur();
+						$scope.marker_mode = "list";
+						$scope.selected_index = 0;
+						$('#person_' + $scope.knocklist.people[$scope.selected_index].rkid).addClass('selected');
+
+					}
+
+					// LOAD CONTROL MODE - SELECT FIRST ONE
+					else if($scope.marker_mode == "list") {
+						$scope.marker_mode = "control";
+						$('#1_input').focus();
+						$scope.selected_control = 1;
+
+						$('#person_' + $scope.knocklist.people[$scope.selected_index].rkid).removeClass('selected');
+						$scope.selected_index = -1;
+
+					}
+
+					e.preventDefault();
+
+					return;
+				}
+
+				switch(k){
+				
+					
+					// go down
+					case 40 : 
+
+						if($scope.marker_mode == "control"){
+							$scope.selected_control++;
+							if($scope.selected_control == 6) $scope.selected_control = 1;
+							$('#' + $scope.selected_control + "_input").focus();
+							e.preventDefault();
+						}
+
+						// iterate down the list of results
+						else if($scope.marker_mode == "list"){
+							$('#person_' + $scope.knocklist.people[$scope.selected_index].rkid).removeClass('selected');
+							$scope.selected_index++;
+							if($scope.selected_index == $scope.knocklist.people.length) $scope.selected_index = 0;
+							$('#person_' + $scope.knocklist.people[$scope.selected_index].rkid).addClass('selected');
+							e.preventDefault();	
+						}
+						
+					break;
+
+
+					// go up
+					case 38 : 
+						if($scope.marker_mode == "control"){
+							$scope.selected_control--;
+							if($scope.selected_control == 0) $scope.selected_control = 5;
+							$('#' + ($scope.selected_control) + "_input").focus();
+							e.preventDefault();
+						}
+
+						// iterate down the list of results
+
+						else if($scope.marker_mode == "list"){
+							$('#person_' + $scope.knocklist.people[$scope.selected_index].rkid).removeClass('selected');
+							$scope.selected_index--;
+							if($scope.selected_index == -1) $scope.selected_index = $scope.knocklist.people.length - 1;
+							$('#person_' + $scope.knocklist.people[$scope.selected_index].rkid).addClass('selected');
+							e.preventDefault();
+						}
+
+					break;
+
+
+					// enter key - search
+					case 13 :
+
+						// if on the controls, execute the search
+						if($scope.marker_mode == "control"){
+							$scope.search();
+							e.preventDefault();
+						}
+
+						// if on the results, toggle the petition status
+						else if($scope.marker_mode == "list"){
+
+							var person = $scope.knocklist.people[$scope.selected_index];
+							person.has_signed = (person.has_signed == 1 || person.has_signed == "true") ? 0 : 1;
+
+							var request = {
+								api : 'toggleSigned',
+								rkid : person.rkid,
+								has_signed : person.has_signed
+							}
+							$rootScope.appScope.runApi(request, function(status){
+								$scope.signed_tally = status.tally;
+							});
+
+							e.preventDefault();
+						}
+
+						
+					break;
+
+
+				}
+			})
+		}
+
+		$scope.updateMarker = function(e){
+			var id = parseInt(e.target.id.split('_')[0]);
+			$scope.selected_control = id;
 		}
 
 		$scope.reverse = function(){

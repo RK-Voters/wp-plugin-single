@@ -56,6 +56,12 @@
 					<td><label for="host_ctrl">Hosting Event</label></td>
 
 				</tr>
+				<tr>
+					<td><input type="checkbox" class="checkbox" id="signed_ctrl" ng-model="query.has_signed" /></td>
+					<td><label for="signed_ctrl">Signed Petition</label></td>
+					
+
+				</tr>
 				
 			</table>
 		</div>

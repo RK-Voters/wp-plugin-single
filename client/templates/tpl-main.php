@@ -22,7 +22,7 @@
 			</a>
 		</div>
 		<div class="interface_btns clearfix">
-			<button class="rkbutton print_button"  ng-click="printList()">PRINT</button>
+			<button class="rkbutton print_button"  ng-click="markVoters()">MARK SIGNERS</button>
 
 			<button class="rkbutton" ng-click="openSearchForm()">SEARCH</button>
 			
@@ -49,7 +49,7 @@
 		</div>
 	
 		<?php
-			$views = array("individuals", "absentees", "addresses", "knocknotes", "multisheet");
+			$views = array("individuals", "absentees", "addresses", "knocknotes", "multisheet", "mark_voters");
 			foreach($views as $v){
 				echo '<div ng-if="$root.viewMode == \'' . $v . '\'" class="results clearfix">';
 				include("list-$v.php");

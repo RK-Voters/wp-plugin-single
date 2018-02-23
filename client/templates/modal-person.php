@@ -79,9 +79,9 @@
 			</label>
 			&nbsp; &nbsp;
 			<label>
-				<input id="volunteer_other_check" ng-model="person.volunteer_other" type="checkbox" style="width: 20px" 
+				<input id="volunteer_has_signed" ng-model="person.has_signed" type="checkbox" style="width: 20px" 
 						 ng-true-value="'true'" ng-false-value="''"/>&nbsp;
-				Other
+				Signed Petition
 			</label>
 
 		</div>
