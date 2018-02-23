@@ -162,7 +162,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			
 			var cb_fields = ["volunteer", "wants_sign", "host_event", "has_signed"];
 			$.each(cb_fields, function(i, f){ 
-				person[f] = (person[f] == "1") ? "true" : '';
+				person[f] = (person[f] == "1" || person[f] == "true") ? "true" : '';
 			});
 
 			
@@ -300,11 +300,13 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 
 							var person = $scope.knocklist.people[$scope.selected_index];
 							person.has_signed = (person.has_signed == 1 || person.has_signed == "true") ? 0 : 1;
+							person.support_level = (person.support_level != 0) ? person.support_level : 3;
 
 							var request = {
 								api : 'toggleSigned',
 								rkid : person.rkid,
-								has_signed : person.has_signed
+								has_signed : person.has_signed,
+								support_level : person.support_level
 							}
 							$rootScope.appScope.runApi(request, function(status){
 								$scope.signed_tally = status.tally;

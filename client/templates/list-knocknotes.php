@@ -16,7 +16,7 @@
 		<div ng-repeat="person in address.residents" ng-if="person.support_level != 0">
 			<b style="text-transform: uppercase;">{{person.firstname}} {{person.lastname}}</b>
 			<span ng-if="person.phone != ''"> - {{person.phone}}</span>
-			<br />Support Level: {{person.support_level}} - {{person.bio}}
+			<br />Support Level: {{person.support_level}}<span ng-if="person.has_signed"> - Signed Petition</span><span ng-if="person.bio"> - {{person.bio}}</span>
 			<br /><br />
 		</div>
 	</div>
