@@ -51,6 +51,30 @@ function load_rkvoters() {
 		exit();
 	}
 
+	if(isset($_REQUEST['api']) && $_REQUEST['api'] == 'export_donors'){
+		global $voter_list, $query, $list_size;
+
+		// open the output stream
+		header('Content-Disposition: attachment; filename="donors.csv"');
+		$fh = fopen('php://output', 'w');
+
+		// Start output buffering (to capture stream contents)
+		ob_start();
+    
+		
+		$donor_list = json_decode(stripSlashes($_REQUEST['payload']));
+		
+		$fields = array('amount', 'datetime', 'firstname', 'lastname', 'city', 'state', 'phone', 'employer', 'profession', 'address', 'address2', 'zip', 'country', 'email');
+		foreach($donor_list as $d){
+			$row = array();
+			foreach($fields as $f) $row[$f] = $d -> $f;
+			fputcsv($fh, $row);
+		}
+
+
+		exit();
+	}	
+
 }
 
 

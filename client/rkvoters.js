@@ -361,8 +361,8 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 		$scope.loadComponent = function(componentName){
 			$scope.component = componentName;
 			if(componentName == 'report'){
-				$scope.showMap = 1;
-				$rootScope.viewMode = 'totals';
+				$scope.viewMode = 'fundraising';
+				$scope.updateReportMode('fundraising');
 			}
 			if(componentName == 'knocklist'){
 				$scope.showMap = -1;
@@ -414,7 +414,7 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			request.user_name = rkvoters_config.user_name;
 			$http({
 				method: 'POST',
-				url: rkvoters_config.api_url,
+				url: rkvoters_config.api_url + "app.php",
 				data: request
 			}).then(
 				function successCallback(response) {
@@ -523,6 +523,37 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 				templateUrl: rkvoters_config.template_dir + 'modal-search.php',
 				controller: 'SearchFormCtrl'
 			});		
+		}
+
+		$scope.updateReportMode = function(viewMode){
+			if(viewMode == 'fundraising'){
+				var request = {
+					api : 'getDonations'
+				}
+
+				$scope.runApi(request, function(donationSets){
+					$scope.donationSets = donationSets;
+				});
+			}
+			if(viewMode == "mailchimp"){
+				$('#hiddenForm2').attr('action', rkvoters_config.api_url + 'mailchimp.php').submit();
+
+			}
+		}
+
+
+		$scope.downloadDonors = function(){
+
+			var donors = [];
+			for(var i = 0; i < $scope.donationSets.length; i++){
+				for(var j = 0; j < $scope.donationSets[i].donors.length; j++){
+					donors.push($scope.donationSets[i].donors[j])
+				}
+			}
+
+			$('#hiddenForm').html(
+				'<textarea name="payload">' + JSON.stringify(donors) + '</textarea>' +
+				'<input name="api" value="export_donors" />').submit();
 		}
 	
 		// AND FIRE!!!	

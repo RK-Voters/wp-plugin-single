@@ -7,6 +7,7 @@
 	<input type="text" class="textInput" placeholder="Num" ng-model="query.stnum" id="3_input" ng-focus="updateMarker($event)">
 	<input type="text" class="textInput" placeholder="Street" ng-model="query.stname" id="4_input" ng-focus="updateMarker($event)">
 	<input type="text" class="textInput" placeholder="City" ng-model="query.city" id="5_input" ng-focus="updateMarker($event)">
+	<input type="text" class="textInput" placeholder="Zip" ng-model="query.zip" id="6_input" ng-focus="updateMarker($event)">
 
 	<button class="rkbutton" ng-click="search()">SEARCH</button>
 </div>
