@@ -92,7 +92,8 @@
 
 										echo '	<b style="text-transform: uppercase;">' . $person -> firstname . ' ' . $person -> lastname . '</b>';
 										if($person -> phone != '') echo '<span> - ' . $person -> phone . '</span>';
-										echo '<br />Support Level: ' . $person -> support_level . '<span ng-if="person.has_signed"> - Signed Petition</span>' - ' . $person -> bio . '<br /><br />';
+										echo '<br />Support Level: ' . $person -> support_level . '. <span ng-if="person.has_signed"> Signed Petition. </span>' . 
+											$person -> bio . '<br /><br />';
 									}
 								}
 				echo   		'</div>
