@@ -609,27 +609,35 @@ app.controller('PersonAdderCtrl',
 	['$scope', '$rootScope', '$uibModal',
 		function($scope, $rootScope, $uibModal){
 			var $ = jQuery;		
-			
-			var st = $rootScope.appScope.query.stname;
-			
+						
 			
 			$scope.person = {
-				stname : st,
+				stname : $rootScope.appScope.query.stname,
+				stnum : 0,
 				enroll: 'U',
 				active: 1,
-				city: 'Portland',
+				city: $rootScope.appScope.query.city,
 				state: 'ME'
 			};	
 			
-			$scope.savePerson = function(){
+			$scope.savePerson = function(closeOnComplete){
 				var request = {
 					api: 'addPerson',
 					person: $scope.person,
 					listRequest: $rootScope.appScope.listRequest
 				}
-				$rootScope.appScope.runApi(request, function(revisedList){
-					$rootScope.appScope.load_knocklist(revisedList);
-					$scope.$close();
+				$rootScope.appScope.runApi(request, function(response){
+
+					$rootScope.appScope.load_knocklist([response]);
+
+					if(closeOnComplete) $scope.$close();
+
+					else {
+						$rootScope.mode = "Edit";
+						$scope.person = response;
+					} 
+
+
 				});
 			}
 
