@@ -70,22 +70,30 @@
 
 
 		<?php 
+			$current_street = ''; $voter_list[0] -> stname;
+
 			foreach($voter_list as $address){
 
+				if($current_street != $address -> stname) {
+					$current_street = $address -> stname;
+					echo '<b>' . $current_street . "</b>";
+				}
+
 				echo 	'<div style="clear:both;" class="result clearfix">
-							<div style="font-weight: bold">' . $address -> address . '</div>
-							<div class="addressResult col-sm-5 clearfix">';
+							<div style="font-style: italic;">' . $address -> address . '</div>
+							<div class="addressResult col-sm-7 clearfix">';
 
 								foreach($address -> residents as $person){
 
 									echo '	<div>
 												<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-												<span class="addressResident">' . $person -> residentLabel . '</span>
-											</div>';
+												<span class="addressResident">' . $person -> residentLabel . '</span>';
+												if($person -> phone != '') echo '<span style="font-weight: bold"> - ' . $person -> phone . '</span>';
+									echo	'</div>';
 								}
 
 				echo 	 	'</div>
-							<div class="col-sm-7" style="font-size: 11px">';
+							<div class="col-sm-5" style="font-size: 11px">';
 
 								foreach($address -> residents as $person){
 									if($person -> support_level != 0){
