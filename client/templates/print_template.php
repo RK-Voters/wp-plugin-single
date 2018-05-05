@@ -70,7 +70,7 @@
 
 
 		<?php 
-			$current_street = ''; $voter_list[0] -> stname;
+			$current_street = ''; 
 
 			foreach($voter_list as $address){
 

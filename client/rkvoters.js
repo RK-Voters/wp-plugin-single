@@ -48,8 +48,11 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			$rootScope.callstatus = 'Connection';
 			$scope.merging = false;
 			$scope.merge_person = false;
+
+
+			$scope.searchMode = 'query';
 		}			
-		$scope.init();
+		
 
 
 
@@ -355,6 +358,61 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 			});
 		}
 
+		$scope.pickStreets = function(){
+
+			if($rootScope.query.city == ''){
+				$('#5_input').addClass('submit_error');
+			}
+			else $('#5_input').removeClass('submit_error');
+
+			var request = {
+				api: 'get_streets',
+				listRequest: $rootScope.query
+			}
+			$scope.runApi(request, function(response){
+				$scope.searchMode = 'streets';
+
+				$scope.streets_obj = {
+					list : response,
+					selected : {}
+				}
+
+				
+
+			});
+		}
+
+		$scope.filterStrings = function(){
+			var search_str = $scope.streets_obj.search_str.toUpperCase();
+			
+			$scope.streets_obj.list = $scope.streets_obj.list.map(function(e) { 
+				e.hide = (e.stname.toUpperCase().indexOf(search_str) == -1);
+				if(search_str == '') e.hide = false;
+				return e;
+			});
+			
+			
+		}
+
+		$scope.updateStreets = function(){
+			$scope.query.selected_streets = [];
+
+			$scope.streets_obj.total = 0;
+
+			for(var i in $scope.streets_obj.selected){
+				if($scope.streets_obj.selected[i]) {
+					var s = $scope.streets_obj.list[i];
+					$scope.query.selected_streets.push(s.stname);
+					$scope.streets_obj.total += parseInt(s.total);
+				}
+			}
+			
+			$scope.streets_obj.title_str = $scope.query.selected_streets.join(', ');
+		}
+
+		$scope.exitStreets = function(){
+			$scope.searchMode = 'query';
+		}
 		
 		
 		// UI CONTROLS
@@ -557,7 +615,9 @@ app.controller('RKVCtrl', ['$scope', '$http', '$sce', '$rootScope', '$window', '
 		}
 	
 		// AND FIRE!!!	
+		$scope.init();
 		$scope.loadComponent('knocklist');
+		$scope.markVoters();
 
 	}
 ]);
@@ -805,3 +865,4 @@ app.controller('SearchFormCtrl',
 		}
 	]
 );
+
